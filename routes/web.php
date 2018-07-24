@@ -14,6 +14,6 @@
 Route::get('/','PortalController@home');
 
 // User route
-Route::get('/user', 'UserController@index');
+Route::get('/user', 'UserController@index')->name('public.index');
 Route::get('/user/login', 'UserController@login')->name('user.login');
 Route::get('/user/register', 'UserController@register')->name('user.register');
