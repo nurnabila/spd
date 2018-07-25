@@ -4,31 +4,35 @@
     <!-- Page Content -->
     <section class="py-5">
       <div class="container">
-        <form>
-          <h1>Register New User</h1>
-          <br>
+          <h1>Register New User</h1><br>
+
+          @include('common.alert')
+          @include('common.form_error')
+
+          <form method="POST" action="{{ route('user.register.post') }}">
+            @csrf
           <div class="form-group row">
-            <label for="inputName3" class="col-sm-2 col-form-label">Name</label>
+            <label for="inputName31" class="col-sm-2 col-form-label">Name</label>
             <div class="col-sm-10">
-              <input type="email" name="name" class="form-control" id="inputName3" placeholder="Name">
+              <input type="text" name="name" class="form-control" id="inputName1" placeholder="Name" value="{{ old('name') }}">
             </div>
           </div>
           <div class="form-group row">
-            <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
+            <label for="inputEmail2" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
-              <input type="email" name="email" class="form-control" id="inputEmail3" placeholder="Email">
+              <input type="email" name="email" class="form-control" id="inputEmail2" placeholder="Email" value="{{ old('email') }}">
             </div>
           </div>
           <div class="form-group row">
-            <label for="inputPICNo3" class="col-sm-2 col-form-label">IC No</label>
+            <label for="inputPIC3" class="col-sm-2 col-form-label">IC No</label>
             <div class="col-sm-10">
-              <input type="icno" name="icno" class="form-control" id="inputICNo3" placeholder="IC No without dash(-)">
+              <input type="text" name="ic" class="form-control" id="inputIC3" placeholder="IC No without dash(-)" value="{{ old('ic') }}">
             </div>
           </div>
           <div class="form-group row">
-            <label for="inputPassword3" class="col-sm-2 col-form-label">Password</label>
+            <label for="4" class="col-sm-2 col-form-label">Password</label>
             <div class="col-sm-10">
-              <input type="password" name="password" class="form-control" id="inputPassword3" placeholder="Password">
+              <input type="password" name="password" class="form-control" id="inputPassword4" placeholder="Password">
             </div>
           </div>
           
