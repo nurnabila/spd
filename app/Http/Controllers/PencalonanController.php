@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use\App\Sesi;
+use App\Sesi;
+use App\Calon;
+use App\Pencalonan;
+use Auth;
 
-class SesiController extends Controller
+class PencalonanController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,11 +17,7 @@ class SesiController extends Controller
      */
     public function index()
     {
-        //Sesi::all = select * from sesi
-        return view('backend.sesi_index')->withSesis(Sesi::all());
-        
-        //Sesi::all = select * from sesi where status = 1
-        //$openSesi = Sesi::where('status', 1)->get();
+        //
     }
 
     /**
@@ -28,7 +27,10 @@ class SesiController extends Controller
      */
     public function create()
     {
-        return view('backend.sesi_add')->withSesi(new Sesi);
+        return view('backend.pencalonan_add')
+        ->withSesis(Sesi::where('status', true)->get())
+        ->withCalon(new Calon)
+        ->withPencalonan(new Pencalonan);
     }
 
     /**
@@ -40,15 +42,28 @@ class SesiController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'sesi_id' => 'required',
             'name' => 'required',
-            'pingat' => 'required',
+            'ic' => 'required',
+            'email' => 'required',
+            'asas' => 'required',
         ]);
 
-        $request['status'] = $request->status == 'on' ? true : false;
+        //Sesi
+        $sesi = Sesi::findOrFail($request->sesi_id);
 
-        Sesi::create($request->only('name', 'pingat', 'status'));
+        //Calon
+        $calon = Calon::create($request->only('name', 'ic', 'email'));
 
-        return back()->withSuccess('Successfully add');
+        //Pencalonan
+        $pencalonan = new Pencalonan;
+        $pencalonan->user_id = Auth::user()->id;
+        $pencalonan->sesi_id = $sesi->id;
+        $pencalonan->calon_id = $calon->id;
+        $pencalonan->asas = $request->asas;
+        $pencalonan->save();
+
+        return back()->withSuccess('Successfully added');
     }
 
     /**
@@ -59,7 +74,7 @@ class SesiController extends Controller
      */
     public function show($id)
     {
-        return view('backend.sesi_show')->withSesi(Sesi::findOrFail($id));
+        //
     }
 
     /**
@@ -70,7 +85,7 @@ class SesiController extends Controller
      */
     public function edit($id)
     {
-        return view('backend.sesi_edit')->withSesi(Sesi::findOrFail($id));
+        //
     }
 
     /**
@@ -82,19 +97,7 @@ class SesiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $request->validate([
-            'name' => 'required',
-            'pingat' => 'required',
-        ]);
-
-        $request['status'] = $request->status == 'on' ? true : false;
-        
-
-        Sesi::where('id', $id)->update($request->only('name', 'pingat', 'status'));
-        
-
-        return redirect()->route('sesi.index')->withSuccess('Successfully update');
-
+        //
     }
 
     /**
@@ -105,8 +108,6 @@ class SesiController extends Controller
      */
     public function destroy($id)
     {
-        Sesi::destroy($id);
-
-        return back()->withSuccess('Successfully delete');
+        //
     }
 }
