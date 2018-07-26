@@ -9,6 +9,7 @@
       <div class="container">
         <form method="POST" action="{{ route('user.login.post') }}">
           @csrf
+          <h1>Sign In</h1><br>
           <div class="form-group row">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Email</label>
             <div class="col-sm-10">
