@@ -23,12 +23,14 @@ Route::get('/user/register', 'UserController@register')->name('user.register');
 Route::post('/user/register', 'UserController@registerPost')->name('user.register.post');
 
 //Authenticated Link
-
 Route::middleware(['auth'])->group(function(){
 	Route::get('/user', 'UserController@dashboard')->name('user.dashboard');
 
-	Route::resources([
-		'sesi' => 'SesiController',
-		'pencalonan' => 'PencalonanController',
-	]);
+	Route::resource('sesi', 'SesiController')->middleware('role:admin');
+	Route::resource('pencalonan', 'PencalonanController');
+
+	//Route::resources([
+	//	'sesi' => 'SesiController',
+	//	'pencalonan' => 'PencalonanController',
+	//]);
 });

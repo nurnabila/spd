@@ -3,9 +3,15 @@
             <label for="inputName31" class="col-sm-2 col-form-label">Sesi</label>
             <div class="col-sm-10">
               <select name="sesi_id" class="form-control">
+
                 @foreach($sesis as $sesi)
+                @if(isset($calon->sesi->id) && old('sesi_id', $sesi->id)==$calon->sesi->id)
+                <option value="{{ $sesi->id }}" selected>{{ $sesi->name }}</option>
+                @else
                 <option value="{{ $sesi->id }}">{{ $sesi->name }}</option>
+                @endif
                 @endforeach
+                
               </select>
             </div>
           </div>
@@ -33,6 +39,6 @@
         <div class="form-group row">
           <label for="inputPIC3" class="col-sm-2 col-form-label">Asas</label>
           <div class="col-sm-10">
-            <textarea class="form-control" name="asas">{{ old('asas', $pencalonan->asas) }}</textarea>
+            <textarea class="form-control" name="asas">{{ old('asas', $calon->asas) }}</textarea>
           </div>
         </div>

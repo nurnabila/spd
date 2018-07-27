@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Sesi;
 use App\Calon;
-use App\Pencalonan;
 use Auth;
 
 class PencalonanController extends Controller
@@ -17,7 +16,7 @@ class PencalonanController extends Controller
      */
     public function index()
     {
-        //
+        return view('backend.pencalonan_index')->withCalons(Auth::user()->calons()->get());
     }
 
     /**
@@ -29,8 +28,7 @@ class PencalonanController extends Controller
     {
         return view('backend.pencalonan_add')
         ->withSesis(Sesi::where('status', true)->get())
-        ->withCalon(new Calon)
-        ->withPencalonan(new Pencalonan);
+        ->withCalon(new Calon);
     }
 
     /**
@@ -52,14 +50,13 @@ class PencalonanController extends Controller
         //Sesi
         $sesi = Sesi::findOrFail($request->sesi_id);
 
-        //Calon
-        $calon = Calon::create($request->only('name', 'ic', 'email'));
-
         //Pencalonan
-        $pencalonan = new Pencalonan;
+        $pencalonan = new Calon;
+        $pencalonan->name = $request->name;
+        $pencalonan->ic = $request->ic;
+        $pencalonan->email = $request->email;
         $pencalonan->user_id = Auth::user()->id;
         $pencalonan->sesi_id = $sesi->id;
-        $pencalonan->calon_id = $calon->id;
         $pencalonan->asas = $request->asas;
         $pencalonan->save();
 
@@ -85,7 +82,9 @@ class PencalonanController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('backend.pencalonan_edit')
+        ->withCalon(Calon::findOrFail($id))
+        ->withSesis(Sesi::where('status',1)->get());
     }
 
     /**
@@ -97,7 +96,33 @@ class PencalonanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+
+            'name' => 'required',
+            'ic' => 'required',
+            'email' => 'required',
+            'sesi_id' => 'required',
+            'asas' => 'required',
+        ]);
+
+        // Sesi
+        $sesi = Sesi::findOrFail($request->sesi_id);
+
+        //Pencalonan
+        $pencalonan = Calon::findOrFail($id);
+        $pencalonan->name = $request->name;
+        $pencalonan->ic = $request->ic;
+        $pencalonan->email = $request->email;
+        $pencalonan->user_id = Auth::user()->id;
+        $pencalonan->sesi_id = $sesi->id;
+        $pencalonan->asas = $request->asas;
+        $pencalonan->save();
+
+        //other syntax
+        //Calon::where('id', $id)->update($request->only('name', 'ic', 'email', 'sesi_id', 'asas'));
+        
+
+        return redirect()->route('pencalonan.index')->withSuccess('Successfully update');
     }
 
     /**
@@ -108,6 +133,8 @@ class PencalonanController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Calon::destroy($id);
+
+        return back()->withSuccess('Successfully delete');
     }
 }
